@@ -23,6 +23,12 @@
     <None Include="..\..\Config\DefaultGame.ini">
       <Filter>Config</Filter>
     </None>
+    <Filter Include="Config\HoloLens">
+      <UniqueIdentifier>{4C8DD267-CDE7-336F-8602-F5F485D22BAB}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\HoloLens\HoloLensEngine.ini">
+      <Filter>Config\HoloLens</Filter>
+    </None>
     <Filter Include="Source\Asteroids">
       <UniqueIdentifier>{1C3A0620-2FE0-3C51-A64A-33026F9E3B18}</UniqueIdentifier>
     </Filter>
@@ -40,6 +46,15 @@
     </ClCompile>
     <ClInclude Include="..\..\Source\Asteroids\AsteroidsGameModeBase.h">
       <Filter>Source\Asteroids</Filter>
+    </ClInclude>
+    <Filter Include="Source\Asteroids\Core">
+      <UniqueIdentifier>{29F140F4-CAAD-3073-99B4-4E245CC54CA9}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Asteroids\Core\AsteriodsPlayerController.cpp">
+      <Filter>Source\Asteroids\Core</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Asteroids\Core\AsteriodsPlayerController.h">
+      <Filter>Source\Asteroids\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
