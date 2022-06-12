@@ -47,6 +47,15 @@
     <ClInclude Include="..\..\Source\Asteroids\AsteroidsGameModeBase.h">
       <Filter>Source\Asteroids</Filter>
     </ClInclude>
+    <Filter Include="Source\Asteroids\Actors">
+      <UniqueIdentifier>{5B19924F-5D8B-3C02-969F-3B13AC44D12C}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\Asteroids\Actors\Zone.cpp">
+      <Filter>Source\Asteroids\Actors</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Asteroids\Actors\Zone.h">
+      <Filter>Source\Asteroids\Actors</Filter>
+    </ClInclude>
     <Filter Include="Source\Asteroids\Core">
       <UniqueIdentifier>{29F140F4-CAAD-3073-99B4-4E245CC54CA9}</UniqueIdentifier>
     </Filter>
