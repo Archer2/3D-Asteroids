@@ -44,6 +44,12 @@
     <Filter Include="Source\Asteroids\Actors">
       <UniqueIdentifier>{5B19924F-5D8B-3C02-969F-3B13AC44D12C}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Asteroids\Actors\ShipBase.cpp">
+      <Filter>Source\Asteroids\Actors</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\Asteroids\Actors\ShipBase.h">
+      <Filter>Source\Asteroids\Actors</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\Asteroids\Actors\Zone.cpp">
       <Filter>Source\Asteroids\Actors</Filter>
     </ClCompile>
