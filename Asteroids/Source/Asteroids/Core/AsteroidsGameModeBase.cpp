@@ -2,8 +2,10 @@
 
 
 #include "AsteroidsGameModeBase.h"
+#include "Actors/ShipBase.h"
 
 AAsteroidsGameModeBase::AAsteroidsGameModeBase()
 {
-	//PlayerControllerClass = ConstructorHelpers::FClassFinder<APlayerController>(TEXT("Source/Asteroids/Core/AsteroidsPlayerController")).Class;
+	// Set default classes. These should be overridden to Blueprint Classes in BP extension if necessary
+	DefaultPawnClass = AShipBase::StaticClass();
 }

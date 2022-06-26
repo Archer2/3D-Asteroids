@@ -16,4 +16,7 @@ class ASTEROIDS_API AAsteroidsGameModeBase : public AGameModeBase
 	
 public:
 	AAsteroidsGameModeBase();
+
+protected:
+
 };
