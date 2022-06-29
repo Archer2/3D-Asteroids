@@ -28,14 +28,14 @@ void AZone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DrawDebugOutline();
+	DrawDebugOutline(DeltaTime);
 }
 
-void AZone::DrawDebugOutline()
+void AZone::DrawDebugOutline(float DeltaTime)
 {
 	TObjectPtr<UWorld> world = GetWorld();
 	if (world == nullptr)
 		return;
 
-	DrawDebugBox(world, GetActorLocation(), m_size, FColor::Black, true, 1.f, (uint8)0U, 5.f);
+	DrawDebugBox(world, GetActorLocation(), m_size, FColor::Black, true, DeltaTime, (uint8)0U, 5.f);
 }

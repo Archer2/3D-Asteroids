@@ -12,7 +12,7 @@ class ASTEROIDS_API AZone : public AActor
 	GENERATED_BODY()
 	
 protected:
-	void DrawDebugOutline();
+	void DrawDebugOutline(float DeltaTime);
 
 	UPROPERTY(EditAnywhere)
 		FVector m_size;
