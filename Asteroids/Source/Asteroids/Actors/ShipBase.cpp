@@ -2,6 +2,8 @@
 
 
 #include "Actors/ShipBase.h"
+#include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Runtime/Engine/Public/EngineGlobals.h"
 
 // Sets default values
@@ -18,8 +20,10 @@ AShipBase::AShipBase()
 	m_cameraComponent->SetupAttachment(RootComponent);
 	FVector defaultCameraLocation(-500.f, 0.f, 150.f);
 	FQuat defaultCameraRotation(FVector3d(0.0, 1.0, 0.0), FMath::DegreesToRadians(5.f));
-	
 	m_cameraComponent->SetRelativeLocationAndRotation(defaultCameraLocation, defaultCameraRotation);
+
+	m_movementComponent = CreateDefaultSubobject<UPawnMovementComponent, UFloatingPawnMovement>(TEXT("Movement Component"));
+	m_movementComponent->UpdatedComponent = RootComponent;
 
 	m_visibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Base"));
 	m_visibleComponent->SetupAttachment(RootComponent);
@@ -72,33 +76,45 @@ void AShipBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 
 void AShipBase::OnMoveForward(float axisValue)
-{
-	SetActorLocation(GetActorLocation() + GetActorForwardVector() * axisValue);
+{	
+	if (axisValue != 0.f) {
+		AddMovementInput(GetActorForwardVector(), axisValue);
+	}
 }
 
 void AShipBase::OnMoveBackward(float axisValue)
 {
-	SetActorLocation(GetActorLocation() + GetActorForwardVector() * -axisValue);
+	if (axisValue != 0.f) {
+		AddMovementInput(GetActorForwardVector(), -axisValue);
+	}
 }
 
 void AShipBase::OnMoveRightward(float axisValue)
 {
-	SetActorLocation(GetActorLocation() + GetActorRightVector() * axisValue);
+	if (axisValue != 0.f) {
+		AddMovementInput(GetActorRightVector(), axisValue);
+	}
 }
 
 void AShipBase::OnMoveLeftward(float axisValue)
 {
-	SetActorLocation(GetActorLocation() + GetActorRightVector() * -axisValue);
+	if (axisValue != 0.f) {
+		AddMovementInput(GetActorRightVector(), -axisValue);
+	}
 }
 
 void AShipBase::OnMoveUpward(float axisValue)
 {
-	SetActorLocation(GetActorLocation() + GetActorUpVector() * axisValue);
+	if (axisValue != 0.f) {
+		AddMovementInput(GetActorUpVector(), axisValue);
+	}
 }
 
 void AShipBase::OnMoveDownward(float axisValue)
 {
-	SetActorLocation(GetActorLocation() + GetActorUpVector() * -axisValue);
+	if (axisValue != 0.f) {
+		AddMovementInput(GetActorUpVector(), -axisValue);
+	}
 }
 
 void AShipBase::OnRollClockwise(float axisValue)
@@ -133,6 +149,9 @@ void AShipBase::OnMouseMoveX(float axisValue)
 // Temporary function that is a single-axis callback instead of Mouse XY 2D Axis
 void AShipBase::OnMouseMoveY(float axisValue)
 {
+#define IS_INVERTED_Y true
+	if (IS_INVERTED_Y) axisValue = -axisValue; // Placeholder for more formal InvertYAxis controls
+
 	FQuat rotation(GetActorQuat() * FQuat(FVector3d(0.0, 1.0, 0.0), FMath::DegreesToRadians(axisValue)));
 	SetActorRotation(rotation);
 }

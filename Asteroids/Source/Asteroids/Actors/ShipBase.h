@@ -7,6 +7,8 @@
 #include "Camera/CameraComponent.h"
 #include "ShipBase.generated.h"
 
+class UPawnMovementComponent;
+
 UCLASS()
 class ASTEROIDS_API AShipBase : public APawn
 {
@@ -37,9 +39,17 @@ protected:
 	void DrawDebugAxes(float DeltaTime);
 
 	UPROPERTY(EditAnywhere)
-		TObjectPtr<USceneComponent> m_visibleComponent;
+		TObjectPtr<UStaticMeshComponent> m_visibleComponent;
 	UPROPERTY(VisibleAnywhere)
+		TObjectPtr<UPawnMovementComponent> m_movementComponent;
+	UPROPERTY(VisibleAnywhere) // To be changed to a camera on a spring arm
 		TObjectPtr<UCameraComponent> m_cameraComponent;
+
+	FVector m_acceleration;
+	FVector m_cachedAcceleration;
+	FVector m_velocity;
+	FVector m_cachedVelocity;
+	float m_maxSpeed = 50.f;
 
 public:	
 	// Called every frame
