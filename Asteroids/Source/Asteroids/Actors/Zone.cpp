@@ -21,6 +21,8 @@ void AZone::BeginPlay()
 	// Set min and max corners in local space
 	m_minCorner = -m_size;
 	m_maxCorner = m_size;
+
+	DrawDebugOutline(-1.f);
 }
 
 // Called every frame
@@ -28,7 +30,7 @@ void AZone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DrawDebugOutline(DeltaTime);
+	//DrawDebugOutline(DeltaTime);
 }
 
 void AZone::DrawDebugOutline(float DeltaTime)
@@ -37,5 +39,5 @@ void AZone::DrawDebugOutline(float DeltaTime)
 	if (world == nullptr)
 		return;
 
-	DrawDebugBox(world, GetActorLocation(), m_size, FColor::Black, true, DeltaTime, (uint8)0U, 5.f);
+	DrawDebugBox(world, GetActorLocation(), m_size, FColor::Black, true, (DeltaTime > 0.f) ? DeltaTime : -1, (uint8)0U, 5.f);
 }

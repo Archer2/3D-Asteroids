@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "ShipBase.generated.h"
 
 class UPawnMovementComponent;
@@ -32,6 +33,11 @@ public:
 	virtual void OnMouseMoveX(float axisValue);
 	virtual void OnMouseMoveY(float axisValue);
 
+	UFUNCTION()
+		void OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
+	UFUNCTION()
+		void OnEndOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -44,12 +50,8 @@ protected:
 		TObjectPtr<UPawnMovementComponent> m_movementComponent;
 	UPROPERTY(VisibleAnywhere) // To be changed to a camera on a spring arm
 		TObjectPtr<UCameraComponent> m_cameraComponent;
-
-	FVector m_acceleration;
-	FVector m_cachedAcceleration;
-	FVector m_velocity;
-	FVector m_cachedVelocity;
-	float m_maxSpeed = 50.f;
+	UPROPERTY(VisibleAnywhere)
+		TObjectPtr<USphereComponent> m_collisionComponent;
 
 public:	
 	// Called every frame

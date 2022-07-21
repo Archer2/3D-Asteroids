@@ -14,19 +14,37 @@ AShipBase::AShipBase()
 
 	AutoPossessPlayer = EAutoReceiveInput::Type::Player0;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root Component"));
+	// Setup Collision component (basic sphere as default) as the root component
+	m_collisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Collision Component"));
+	m_collisionComponent->InitSphereRadius(25.f);
+	// CollisionComponent values taken from reference default Third Person C++ Template
+	m_collisionComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	m_collisionComponent->SetCanEverAffectNavigation(false);
+	m_collisionComponent->SetShouldUpdatePhysicsVolume(true);
+	m_collisionComponent->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	m_collisionComponent->bDynamicObstacle = true;
 
+	RootComponent = m_collisionComponent; // Assign to root
+
+	// Setup Camera component
 	m_cameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	m_cameraComponent->SetupAttachment(RootComponent);
 	FVector defaultCameraLocation(-500.f, 0.f, 150.f);
 	FQuat defaultCameraRotation(FVector3d(0.0, 1.0, 0.0), FMath::DegreesToRadians(5.f));
 	m_cameraComponent->SetRelativeLocationAndRotation(defaultCameraLocation, defaultCameraRotation);
 
+	// Setup Movement component
 	m_movementComponent = CreateDefaultSubobject<UPawnMovementComponent, UFloatingPawnMovement>(TEXT("Movement Component"));
 	m_movementComponent->UpdatedComponent = RootComponent;
 
+	// Setup "Visible" component - the ship itself. Eventually this should also handle collision and be the Root
 	m_visibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ship Base"));
-	m_visibleComponent->SetupAttachment(RootComponent);
+	//m_visibleComponent->bUseDefaultCollision = true; // Not working. Mesh has no default collision? Try with a different component
+	m_visibleComponent->SetupAttachment(m_collisionComponent);
+
+	// Set Event triggers
+	OnActorEndOverlap.AddDynamic(this, &AShipBase::OnEndOverlap);
+	m_collisionComponent->OnComponentEndOverlap.AddDynamic(this, &AShipBase::OnEndOverlapComponent);
 }
 
 // Called when the game starts or when spawned
@@ -44,6 +62,16 @@ void AShipBase::DrawDebugAxes(float DeltaTime)
 	DrawDebugLine(world, GetActorLocation(), GetActorLocation() + (GetActorForwardVector() * 100.f), FColor::Red, false, .05f, (uint8)0U, 2.f);
 	DrawDebugLine(world, GetActorLocation(), GetActorLocation() + (GetActorRightVector() * 100.f), FColor::Green, false, .05f, (uint8)0U, 2.f);
 	DrawDebugLine(world, GetActorLocation(), GetActorLocation() + (GetActorUpVector() * 100.f), FColor::Blue, false, .05f, (uint8)0U, 2.f);
+}
+
+void AShipBase::OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("WHAT THE FUCK IS HAPPENING"));
+}
+
+void AShipBase::OnEndOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("THIS SHIT REALLY COULD BE COMMENTED"));
 }
 
 // Called every frame
