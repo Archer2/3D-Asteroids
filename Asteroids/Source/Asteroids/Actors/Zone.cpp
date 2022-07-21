@@ -3,13 +3,16 @@
 
 #include "Actors/Zone.h"
 
+DEFINE_LOG_CATEGORY(LogZone);
+
 // Sets default values
 AZone::AZone()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	m_zoneComponent = CreateDefaultSubobject<USceneComponent>(FName("ZoneComponent"));
+	m_zoneComponent = CreateDefaultSubobject<UBoxComponent>(FName("Zone"));
+	m_zoneComponent->SetGenerateOverlapEvents(true);
 	SetRootComponent(m_zoneComponent);
 }
 
@@ -19,8 +22,10 @@ void AZone::BeginPlay()
 	Super::BeginPlay();
 	
 	// Set min and max corners in local space
-	m_minCorner = -m_size;
-	m_maxCorner = m_size;
+	FVector size = m_zoneComponent->GetScaledBoxExtent();
+	FVector position = GetActorLocation();
+	m_minCorner = position - size;
+	m_maxCorner = position + size;
 
 	DrawDebugOutline(-1.f);
 }
@@ -39,5 +44,5 @@ void AZone::DrawDebugOutline(float DeltaTime)
 	if (world == nullptr)
 		return;
 
-	DrawDebugBox(world, GetActorLocation(), m_size, FColor::Black, true, (DeltaTime > 0.f) ? DeltaTime : -1, (uint8)0U, 5.f);
+	DrawDebugBox(world, GetActorLocation(), (m_maxCorner - m_minCorner) / 2.f, FColor::Black, true, (DeltaTime > 0.f) ? DeltaTime : -1, (uint8)0U, 5.f);
 }

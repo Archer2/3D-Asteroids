@@ -10,6 +10,8 @@
 
 class UPawnMovementComponent;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogShip, Log, All);
+
 UCLASS()
 class ASTEROIDS_API AShipBase : public APawn
 {
@@ -33,8 +35,6 @@ public:
 	virtual void OnMouseMoveX(float axisValue);
 	virtual void OnMouseMoveY(float axisValue);
 
-	UFUNCTION()
-		void OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 	UFUNCTION()
 		void OnEndOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 

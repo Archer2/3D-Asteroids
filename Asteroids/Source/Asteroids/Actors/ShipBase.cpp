@@ -6,6 +6,8 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Runtime/Engine/Public/EngineGlobals.h"
 
+DEFINE_LOG_CATEGORY(LogShip);
+
 // Sets default values
 AShipBase::AShipBase()
 {
@@ -43,7 +45,6 @@ AShipBase::AShipBase()
 	m_visibleComponent->SetupAttachment(m_collisionComponent);
 
 	// Set Event triggers
-	OnActorEndOverlap.AddDynamic(this, &AShipBase::OnEndOverlap);
 	m_collisionComponent->OnComponentEndOverlap.AddDynamic(this, &AShipBase::OnEndOverlapComponent);
 }
 
@@ -64,14 +65,9 @@ void AShipBase::DrawDebugAxes(float DeltaTime)
 	DrawDebugLine(world, GetActorLocation(), GetActorLocation() + (GetActorUpVector() * 100.f), FColor::Blue, false, .05f, (uint8)0U, 2.f);
 }
 
-void AShipBase::OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
-{
-	UE_LOG(LogTemp, Warning, TEXT("WHAT THE FUCK IS HAPPENING"));
-}
-
 void AShipBase::OnEndOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("THIS SHIT REALLY COULD BE COMMENTED"));
+	UE_LOG(LogShip, Log, TEXT("Component OnEndOverlap Called"));
 }
 
 // Called every frame
