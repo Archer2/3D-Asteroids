@@ -18,6 +18,12 @@ public:
 	// Sets default values for this actor's properties
 	AZone();
 
+	FVector GetMaxPointWorld();
+	FVector GetMinPointWorld();
+
+	UFUNCTION()
+		void OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor); // Currently unused
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

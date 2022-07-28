@@ -2,6 +2,8 @@
 
 
 #include "Actors/Zone.h"
+#include "GameFramework/PawnMovementComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 
 DEFINE_LOG_CATEGORY(LogZone);
 
@@ -14,6 +16,24 @@ AZone::AZone()
 	m_zoneComponent = CreateDefaultSubobject<UBoxComponent>(FName("Zone"));
 	m_zoneComponent->SetGenerateOverlapEvents(true);
 	SetRootComponent(m_zoneComponent);
+	
+	//OnActorEndOverlap.AddDynamic(this, &AZone::OnEndOverlap);
+}
+
+FVector AZone::GetMaxPointWorld()
+{
+	return m_maxCorner;
+}
+
+FVector AZone::GetMinPointWorld()
+{
+	return m_minCorner;
+}
+
+void AZone::OnEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	if (OverlappedActor != this)
+		return; // If something happened to hit this then it is very bad
 }
 
 // Called when the game starts or when spawned

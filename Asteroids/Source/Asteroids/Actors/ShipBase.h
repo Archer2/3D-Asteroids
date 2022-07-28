@@ -36,7 +36,11 @@ public:
 	virtual void OnMouseMoveY(float axisValue);
 
 	UFUNCTION()
+		void OnBeginOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
 		void OnEndOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	TObjectPtr<UPawnMovementComponent> GetMovementComponent();
 
 protected:
 	// Called when the game starts or when spawned
@@ -52,6 +56,9 @@ protected:
 		TObjectPtr<UCameraComponent> m_cameraComponent;
 	UPROPERTY(VisibleAnywhere)
 		TObjectPtr<USphereComponent> m_collisionComponent;
+
+	bool m_bTeleportNextTick = false;
+	FVector m_desiredTeleportLocation;
 
 public:	
 	// Called every frame

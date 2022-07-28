@@ -2,6 +2,7 @@
 
 
 #include "Actors/ShipBase.h"
+#include "Actors/Zone.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Runtime/Engine/Public/EngineGlobals.h"
@@ -45,6 +46,7 @@ AShipBase::AShipBase()
 	m_visibleComponent->SetupAttachment(m_collisionComponent);
 
 	// Set Event triggers
+	//m_collisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AShipBase::OnBeginOverlapComponent);
 	m_collisionComponent->OnComponentEndOverlap.AddDynamic(this, &AShipBase::OnEndOverlapComponent);
 }
 
@@ -65,15 +67,60 @@ void AShipBase::DrawDebugAxes(float DeltaTime)
 	DrawDebugLine(world, GetActorLocation(), GetActorLocation() + (GetActorUpVector() * 100.f), FColor::Blue, false, .05f, (uint8)0U, 2.f);
 }
 
+void AShipBase::OnBeginOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogShip, Log, TEXT("Ship OnBeginOverlapComponent Called"));
+}
+
 void AShipBase::OnEndOverlapComponent(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	UE_LOG(LogShip, Log, TEXT("Component OnEndOverlap Called"));
+	AZone* overlappedZone;
+	if ((overlappedZone = Cast<AZone>(OtherActor)) != nullptr) {
+		UE_LOG(LogShip, Log, TEXT("Ship OnEndOverlapComponent With Zone"));
+
+		FVector zoneMaxPoint = overlappedZone->GetMaxPointWorld();
+		FVector zoneMinPoint = overlappedZone->GetMinPointWorld();
+		FVector shipPosition = GetActorLocation();
+		FVector desiredShipPosition = shipPosition;
+
+		// Check all dimensions for change and set the desired to the opposite coordinate
+		if (shipPosition.X >= zoneMaxPoint.X) desiredShipPosition.X = zoneMinPoint.X;
+		else if (shipPosition.X <= zoneMinPoint.X) desiredShipPosition.X = zoneMaxPoint.X;
+		if (shipPosition.Y >= zoneMaxPoint.Y) desiredShipPosition.Y = zoneMinPoint.Y;
+		else if (shipPosition.Y <= zoneMinPoint.Y) desiredShipPosition.Y = zoneMaxPoint.Y;
+		if (shipPosition.Z >= zoneMaxPoint.Z) desiredShipPosition.Z = zoneMinPoint.Z;
+		else if (shipPosition.Z <= zoneMinPoint.Z) desiredShipPosition.Z = zoneMaxPoint.Z;
+
+		/* Disable the Movement Component Tick so as not to interfere with it's velocity updates in the middle of a Tick. Trigger a teleport and re-enable
+		*  on the next Actor Tick
+		*
+		*  This must be done because this event could fire while the MovementComponent Tick is operating. Usually this happens after it has cached the
+		*  "Old Location" of the component and before it caches the "New Location". Since it uses the difference between these two values to calculate a new
+		*  Velocity value this causes a massive jump in Velocity (a new magnitude on the order of 100-150k). The teleport must be delayed to a time where 
+		*  the MovementComponent is not Ticking in order to maintain movement values (and in fact attempting to reset them after teleporting here does not work).
+		*/
+		m_movementComponent->SetComponentTickEnabled(false);
+		m_desiredTeleportLocation = desiredShipPosition;
+		m_bTeleportNextTick = true;
+	}
+}
+
+TObjectPtr<UPawnMovementComponent> AShipBase::GetMovementComponent()
+{
+	return m_movementComponent;
 }
 
 // Called every frame
 void AShipBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Perform a cached teleport operation without interfering with Movement
+	if (m_bTeleportNextTick) {
+		TeleportTo(m_desiredTeleportLocation, GetActorRotation(), false, true);
+		m_movementComponent->SetComponentTickEnabled(true);
+		m_bTeleportNextTick = false;
+	}
 
 	// DrawDebugAxes(DeltaTime);
 }
