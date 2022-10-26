@@ -7,7 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Zone.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogZone, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogZones, Log, All);
 
 UCLASS()
 class ASTEROIDS_API AZone : public AActor

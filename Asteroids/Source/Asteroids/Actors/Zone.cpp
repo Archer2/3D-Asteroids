@@ -5,7 +5,7 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 
-DEFINE_LOG_CATEGORY(LogZone);
+DEFINE_LOG_CATEGORY(LogZones);
 
 // Sets default values
 AZone::AZone()
